@@ -1,0 +1,435 @@
+
+@font-face {
+    font-family: 'Anthro';
+    src: url('FONTS/ANTHRO.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Gobold';
+    src: url('FONTS/GOBOLD.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+:root {
+    --chroma: #980000;
+    --purple: #a982df;
+    --wheel-white: #ffffff;
+}
+
+body {
+    margin: 0;
+    width: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow: hidden;
+    background: var(--chroma);
+    font-family: 'Gobold', Arial, sans-serif;
+    color: white;
+}
+
+#main {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+#selectionTitle {
+    margin: 0 0 18px;
+    max-width: 92vw;
+    font-size: clamp(20px, 4vw, 32px);
+    font-weight: 900;
+    text-align: center;
+    color: white;
+    transition: opacity .25s ease;
+}
+
+.wheel-container {
+    position: relative;
+    width: min(90vw, 620px);
+    aspect-ratio: 1 / 1;
+    flex-shrink: 0;
+    transform-origin: center;
+    will-change: transform;
+}
+
+.wheel-disc {
+    position: absolute;
+    width: 97%;
+    height: 97%;
+    left: 1.5%;
+    top: 1%;
+    z-index: 1;
+    overflow: hidden;
+    clip-path: circle(43.5% at 50% 50%);
+    contain: paint;
+    background: var(--wheel-white);
+    font-family: 'Anthro', Arial, sans-serif;
+}
+
+#wheelCanvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    transform-origin: 50% 50%;
+    will-change: transform, filter;
+}
+
+.wheel-outer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.paimon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 19%;
+    height: 19%;
+    transform: translate(-50%, -50%);
+    object-fit: contain;
+    z-index: 3;
+    pointer-events: none;
+}
+
+#result {
+    min-height: 36px;
+    width: min(90vw, 700px);
+    margin-top: 18px;
+    font-size: clamp(17px, 3.5vw, 25px);
+    font-weight: 900;
+    text-align: center;
+    line-height: 1.6;
+    color: white;
+    user-select: text;
+    overflow-wrap: anywhere;
+    transition: opacity .25s ease;
+}
+
+#spinButton {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 20;
+    margin: 0;
+    padding: 14px 34px;
+    border: 3px solid white;
+    border-radius: 18px;
+    background: var(--purple);
+    color: white;
+    font-family: 'Gobold', Arial, sans-serif;
+    font-size: 19px;
+    font-weight: 900;
+    cursor: pointer;
+    transition: transform .15s ease, opacity .2s ease;
+}
+
+#spinButton:active:not(:disabled) {
+    transform: translateY(4px);
+}
+
+#spinButton:disabled,
+.utility-button:disabled {
+    opacity: .6;
+    cursor: default;
+}
+
+#utilityButtons {
+    position: fixed;
+    left: 16px;
+    bottom: 16px;
+    z-index: 20;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.utility-button {
+    border: 2px solid white;
+    border-radius: 12px;
+    padding: 9px 15px;
+    background: var(--purple);
+    color: white;
+    font-family: 'Gobold', Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 900;
+    cursor: pointer;
+    transition: transform .15s ease, opacity .2s ease;
+}
+
+#main.hiding .wheel-container {
+    animation: slideWheelOut 1.4s cubic-bezier(.22,.75,.25,1) forwards;
+}
+
+#main.hiding #spinButton {
+    animation: slideButtonDown 1.1s cubic-bezier(.22,.75,.25,1) forwards;
+}
+
+#main.hiding #selectionTitle,
+#main.hiding #result {
+    opacity: 0;
+}
+
+#main.hidden {
+    display: none;
+}
+
+#main.showing .wheel-container {
+    animation: slideWheelIn 1.4s cubic-bezier(.22,.75,.25,1) both;
+}
+
+#main.showing #spinButton {
+    animation: slideButtonUp 1.1s cubic-bezier(.22,.75,.25,1) both;
+}
+
+#main.showing #selectionTitle,
+#main.showing #result {
+    animation: fadeIn .7s ease both;
+}
+
+@keyframes slideWheelOut {
+    0% {
+        transform: translateX(0) scale(1);
+    }
+    18% {
+        transform: translateX(0) scale(1.04);
+    }
+    35% {
+        transform: translateX(0) scale(.97);
+    }
+    100% {
+        transform: translateX(-130vw) scale(.85);
+    }
+}
+
+@keyframes slideButtonDown {
+    0% {
+        transform: translateY(0);
+    }
+    20% {
+        transform: translateY(-16px);
+    }
+    38% {
+        transform: translateY(5px);
+    }
+    100% {
+        transform: translateY(150vh);
+    }
+}
+
+@keyframes slideWheelIn {
+    0% {
+        transform: translateX(-130vw) scale(.85);
+    }
+    65% {
+        transform: translateX(0) scale(1.04);
+    }
+    82% {
+        transform: translateX(0) scale(.97);
+    }
+    100% {
+        transform: translateX(0) scale(1);
+    }
+}
+
+@keyframes slideButtonUp {
+    0% {
+        transform: translateY(150vh);
+    }
+    65% {
+        transform: translateY(-5px);
+    }
+    82% {
+        transform: translateY(3px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@media (orientation: landscape) {
+    #main {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        grid-template-rows: 1fr;
+        grid-template-areas: "wheel info";
+        align-items: center;
+        justify-items: center;
+        padding: 3vh 3vw;
+        column-gap: 2vw;
+    }
+
+    .wheel-container {
+        grid-area: wheel;
+        width: min(65vh, 46vw);
+        height: min(65vh, 46vw);
+        justify-self: center;
+        align-self: center;
+    }
+
+    #selectionTitle {
+        grid-area: info;
+        align-self: center;
+        justify-self: center;
+        width: 90%;
+        max-width: 650px;
+        margin: 0;
+        transform: translateY(-200px);
+        font-size: clamp(24px, 3vw, 42px);
+        text-align: center;
+    }
+
+    #result {
+        grid-area: info;
+        align-self: center;
+        justify-self: center;
+        width: 90%;
+        max-width: 650px;
+        margin: 45px 0 0;
+        font-size: clamp(20px, 2.4vw, 32px);
+        text-align: center;
+    }
+
+    #spinButton {
+        right: 3vw;
+        bottom: 3vh;
+    }
+
+    #utilityButtons {
+        left: 3vw;
+        bottom: 3vh;
+    }
+}
+
+@media (orientation: landscape) and (max-height: 500px) {
+    .wheel-container {
+        width: min(65vh, 42vw);
+        height: min(65vh, 42vw);
+    }
+
+    #selectionTitle {
+        transform: translateY(-65px);
+        font-size: clamp(19px, 2.8vw, 30px);
+    }
+
+    #result {
+        margin-top: 35px;
+        font-size: clamp(16px, 2vw, 23px);
+    }
+
+    #spinButton {
+        padding: 10px 24px;
+        font-size: 16px;
+    }
+
+    .utility-button {
+        padding: 7px 12px;
+        font-size: 12px;
+    }
+}
+
+
+#selectionTitle {
+    font-size: clamp(24px, 3vw, 42px);
+    line-height: 1.2;
+    overflow-wrap: break-word;
+}
+
+#result {
+    font-size: clamp(20px, 2.2vw, 34px);
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+#spinButton {
+    font-size: clamp(17px, 1.5vw, 24px);
+}
+
+.utility-button {
+    font-size: clamp(13px, 1.1vw, 18px);
+}
+
+@media (orientation: portrait) {
+    #selectionTitle {
+        font-size: clamp(22px, 5vw, 34px);
+    }
+
+    #result {
+        font-size: clamp(18px, 4vw, 27px);
+    }
+
+    #spinButton {
+        font-size: clamp(17px, 4vw, 22px);
+    }
+
+    .utility-button {
+        font-size: clamp(13px, 3vw, 17px);
+    }
+}
+
+@media (orientation: landscape) {
+    #selectionTitle {
+        font-size: clamp(28px, 3.2vw, 48px);
+    }
+
+    #result {
+        font-size: clamp(23px, 2.5vw, 38px);
+    }
+
+    #spinButton {
+        font-size: clamp(18px, 1.6vw, 25px);
+    }
+
+    .utility-button {
+        font-size: clamp(14px, 1.2vw, 19px);
+    }
+}
+
+@media (orientation: landscape) and (max-height: 500px) {
+    #selectionTitle {
+        font-size: clamp(22px, 3vw, 36px);
+    }
+
+    #result {
+        font-size: clamp(18px, 2.2vw, 27px);
+    }
+
+    #spinButton {
+        font-size: 17px;
+    }
+
+    .utility-button {
+        font-size: 13px;
+    }
+}
